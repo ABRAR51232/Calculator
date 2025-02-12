@@ -1,1 +1,174 @@
-# Calculator
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Age Calculator</title>
+  <style>
+    /* Corrected CSS: Removed dots from element names */
+    body {
+      font-family: Arial, sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .container {
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+      max-width: 500px;
+      width: 100%;
+    }
+
+    h1 {
+      font-size: 24px;
+      margin-bottom: 10px;
+      text-align: center;
+    }
+
+    p {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 20px;
+      text-align: center;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    label {
+      display: block;
+      font-size: 14px;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+
+    input[type="date"] {
+      width: 100%;
+      padding: 10px;
+      font-size: 14px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #007bff;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      width: 100%;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-size: 16px;
+      color: #333;
+      text-align: center;
+    }
+
+    .related-links {
+      margin-top: 20px;
+      text-align: center;
+    }
+
+    .related-links a {
+      color: #007bff;
+      text-decoration: none;
+      margin: 0 10px;
+    }
+
+    .related-links a:hover {
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Age Calculator</h1>
+    <p>The Age Calculator can determine the age or interval between two dates. The calculated age will be displayed in years, months, weeks, days, hours, minutes, and seconds.</p>
+    <div class="input-group">
+      <label for="dob">Date of Birth:</label>
+      <input type="date" id="dob">
+    </div>
+    <div class="input-group">
+      <label for="target-date">Age at the Date of:</label>
+      <input type="date" id="target-date">
+    </div>
+    <button onclick="calculateAge()">Calculate Age</button>
+    <div id="result"></div>
+    <div class="related-links">
+      <a href="#">Date Calculator</a> | <a href="#">Time Calculator</a>
+    </div>
+  </div>
+
+  <script>
+    function calculateAge() {
+      const dobInput = document.getElementById('dob').value;
+      const targetDateInput = document.getElementById('target-date').value;
+
+      if (!dobInput || !targetDateInput) {
+        alert('Please enter both dates.');
+        return;
+      }
+
+      const dob = new Date(dobInput);
+      const targetDate = new Date(targetDateInput);
+
+      if (targetDate < dob) {
+        alert('The target date must be after the date of birth.');
+        return;
+      }
+
+      const ageInMilliseconds = targetDate - dob;
+      const ageInSeconds = ageInMilliseconds / 1000;
+      const ageInMinutes = ageInSeconds / 60;
+      const ageInHours = ageInMinutes / 60;
+      const ageInDays = ageInHours / 24;
+      const ageInWeeks = ageInDays / 7;
+
+      let ageInYears = targetDate.getFullYear() - dob.getFullYear();
+      let ageInMonths = targetDate.getMonth() - dob.getMonth();
+      let ageInDaysFinal = targetDate.getDate() - dob.getDate();
+
+      // Adjust for negative months or days
+      if (ageInMonths < 0 || (ageInMonths === 0 && ageInDaysFinal < 0)) {
+        ageInYears--;
+        ageInMonths += 12;
+      }
+
+      if (ageInDaysFinal < 0) {
+        const lastMonthDate = new Date(targetDate.getFullYear(), targetDate.getMonth(), 0);
+        ageInDaysFinal += lastMonthDate.getDate();
+        ageInMonths--;
+      }
+
+      const result = `
+        <p><strong>Age:</strong></p>
+        <p>${ageInYears} years, ${ageInMonths} months, ${ageInDaysFinal} days</p>
+        <p>or ${Math.floor(ageInWeeks)} weeks, ${Math.floor(ageInDays % 7)} days</p>
+        <p>or ${Math.floor(ageInDays)} days</p>
+        <p>or ${Math.floor(ageInHours)} hours</p>
+        <p>or ${Math.floor(ageInMinutes)} minutes</p>
+        <p>or ${Math.floor(ageInSeconds)} seconds</p>
+      `;
+
+      document.getElementById('result').innerHTML = result;
+    }
+  </script>
+</body>
+</html>
